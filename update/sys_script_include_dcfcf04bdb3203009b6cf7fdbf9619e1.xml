@@ -22,15 +22,16 @@ Util.prototype = {
 		// gs.info(JSON.stringify(tagObject));
 	},
 	
-	syncTags: function (sourceGr) {
+	syncTags: function (sourceGr) {		
 		if (sourceGr == undefined) {
 			sourceGr = new GlideRecord(this.tables.source);
 			sourceGr.addQuery('sync_tags', true);
 			sourceGr.query();
 		}
 		
-		
 		while (sourceGr.next()) {
+			gs.info('Syncing tags from source "' + sourceGr.name + '".');
+			
 			var client = new x_16255_cmdb_sync.Client(sourceGr);
 			var lastId;
 			var hasMoreRecords = true;
@@ -43,7 +44,7 @@ Util.prototype = {
 					var count = xml.getNodeText('ServiceResponse/count');
 					hasMoreRecords = xml.getNodeText('ServiceResponse/hasMoreRecords');
 					
-					gs.info('Received ' + count + ' tags from API source "' + sourceGr.name + '". Last Id is ' + lastId);
+					gs.info('Received ' + count + ' tags from source "' + sourceGr.name + '".');
 
 					var tag = xml.getFirstNode('//data/Tag') || false;
 
@@ -68,14 +69,16 @@ Util.prototype = {
 				
 				if (hasMoreRecords == 'false') {
 					hasMoreRecords = false;
-					gs.info('hasMoreRecords = false');
+					gs.info('Pulled all tags from source "' + sourceGr.name + '".' );
 				}
 				else {
 					hasMoreRecords = true;
 					lastId = xml.getNodeText('ServiceResponse/lastId');
-					gs.info('hasMoreRecords = true. Last id = ' + lastId);
+					gs.info('Source "' + sourceGr.name + '" has more tags to pull. Pulled tags until id ' + lastId);
 				}
 			}
+			
+			gs.info('Tag sync from source "' + sourceGr.name + '" completed.');
 		} // while
 	}, // syncTags
 };]]></script>
@@ -83,13 +86,13 @@ Util.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2017-12-07 07:15:12</sys_created_on>
         <sys_id>dcfcf04bdb3203009b6cf7fdbf9619e1</sys_id>
-        <sys_mod_count>24</sys_mod_count>
+        <sys_mod_count>28</sys_mod_count>
         <sys_name>Util</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
         <sys_update_name>sys_script_include_dcfcf04bdb3203009b6cf7fdbf9619e1</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-12-07 11:48:51</sys_updated_on>
+        <sys_updated_on>2017-12-07 12:00:59</sys_updated_on>
     </sys_script_include>
 </record_update>
