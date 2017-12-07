@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element label="Source" max_length="40" name="x_16255_cmdb_sync_source" type="collection">
+        <element label="Downstream Count" max_length="40" name="downstream_count" type="string"/>
+        <element default="true" label="Downstream Sync" max_length="40" name="downstream_sync" type="boolean"/>
+        <element label="Last Asset Groups Sync Timestamp" max_length="40" name="last_asset_groups_sync_timestamp" type="glide_date_time"/>
+        <element label="Last Downstream Sync Timestamp" max_length="40" name="last_downstream_sync_timestamp" type="glide_date_time"/>
+        <element label="Last Tags Sync Timestamp" max_length="40" name="last_tags_sync_timestamp" type="glide_date_time"/>
+        <element label="Last Upstream Sync Timestamp" max_length="40" name="last_upstream_sync_timestamp" type="glide_date_time"/>
+        <element display="true" label="Name" max_length="40" name="name" type="string"/>
+        <element label="Password" max_length="255" name="password" type="password2"/>
+        <element default="https://qualysapi.qualys.com" label="Server" max_length="1024" name="server" type="url"/>
+        <element default="true" label="Sync Asset Groups" max_length="40" name="sync_asset_groups" type="boolean"/>
+        <element default="true" label="Sync Tags" max_length="40" name="sync_tags" type="boolean"/>
+        <element label="Upstream Count" max_length="40" name="upstream_count" type="string"/>
+        <element default="true" label="Upstream Sync" max_length="40" name="upstream_sync" type="boolean"/>
+        <element label="Username" max_length="40" name="username" type="string"/>
+    </element>
+</database>

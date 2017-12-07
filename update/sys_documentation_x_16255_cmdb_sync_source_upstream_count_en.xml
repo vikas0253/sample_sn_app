@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update>
+    <sys_documentation element="upstream_count" label="Upstream Count" language="en" table="x_16255_cmdb_sync_source">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>upstream_count</element>
+            <help/>
+            <hint/>
+            <label>Upstream Count</label>
+            <language>en</language>
+            <name>x_16255_cmdb_sync_source</name>
+            <plural>Upstream Counts</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2017-11-28 11:32:42</sys_created_on>
+            <sys_id>0ab1ab80dbb203009b6cf7fdbf961937</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Upstream Count</sys_name>
+            <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
+            <sys_update_name>sys_documentation_x_16255_cmdb_sync_source_upstream_count_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2017-11-28 11:32:42</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

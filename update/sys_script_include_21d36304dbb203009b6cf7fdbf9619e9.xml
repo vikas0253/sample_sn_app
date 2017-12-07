@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_16255_cmdb_sync.Client</api_name>
+        <client_callable>false</client_callable>
+        <description>Client code, that makes actual API calls.</description>
+        <name>Client</name>
+        <script><![CDATA[var Client = Class.create();
+Client.prototype = {
+	sourceGr: null,
+	
+	apis: {
+		hostsCount: {
+			path: '/qps/rest/2.0/count/am/hostasset',
+			method: 'get'
+		}
+	},
+
+	initialize: function(sourceGr) {
+		this.sourceGr = sourceGr;
+    },
+
+    type: 'Client',
+	
+	/*
+	Calls given api, and returns response.
+	Return value is of RESTResponse type.
+	*/
+	callApi: function (api) {
+		var request = new sn_ws.RESTMessageV2();
+		request.setEndpoint(this.sourceGr.server + api.path);
+		request.setHttpMethod(api.method);
+		request.setRequestHeader('X-Requested-With', 'CMDB_Sync_App');
+		request.setBasicAuth(this.sourceGr.username, this.sourceGr.password.getDecryptedValue());
+		request.setHttpTimeout(120000); // 2 mins
+		return request.execute();
+	},
+	/*
+	Returns true on successful connection; false otherwise.
+	*/
+	testConnection: function () {
+		var response = this.callApi(this.apis.hostsCount);
+		
+		gs.debug('1.0 | testConnection | Response code received is: ' + response.getStatusCode());
+		
+		if (200 != response.getStatusCode()) {
+			// test failed
+			gs.error('1.0 | testConnection | Connection to ' + this.sourceGr.name + ' failed. API Response: ' + response.getBody());
+			return false;
+		}
+		else {
+			// test passed
+			var responseObj = gs.xmlToJSON(response.getBody());
+			
+			if (responseObj && responseObj.ServiceResponse && responseObj.ServiceResponse.responseCode == 'SUCCESS') {
+				gs.info('1.0 | testConnection | Connection to ' + this.sourceGr.name + ' successful!');
+				return true;
+			}
+			else {
+				gs.error('1.0 | testConnection | Connection to ' + this.sourceGr.name + ' failed. API Response: ' + response.getBody());
+				return false;
+			}
+		}
+	} // testConnection
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-11-28 11:42:39</sys_created_on>
+        <sys_id>21d36304dbb203009b6cf7fdbf9619e9</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_name>Client</sys_name>
+        <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
+        <sys_update_name>sys_script_include_21d36304dbb203009b6cf7fdbf9619e9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-11-28 12:32:05</sys_updated_on>
+    </sys_script_include>
+</record_update>
