@@ -41,6 +41,9 @@ Client.prototype = {
 		request.setRequestHeader('X-Requested-With', 'CMDB_Sync_App');
 		request.setBasicAuth(this.sourceGr.username, this.sourceGr.password.getDecryptedValue());
 		request.setHttpTimeout(120000); // 2 mins
+		if (params != undefined && params != null) {
+			request.setRequestBody(params);
+		}
 		return request.execute();
 	},
 	/*
@@ -76,8 +79,11 @@ Client.prototype = {
 	getTagsParams: function (lastId) {
 		var params = '<?xml version="1.0" encoding="UTF-8" ?>';
 		params += '<ServiceRequest>';
+		params += '<preferences><limitResults>1000</limitResults></preferences>';
 		params += '<filters>';
-		params += '<Criteria field="id" operator="GREATER">' + lastId +'</Criteria>';
+		if (lastId != undefined) {
+			params += '<Criteria field="id" operator="GREATER">' + lastId +'</Criteria>';
+		}
 		params += '</filters>';
 		params += '</ServiceRequest>';
 	},
@@ -89,11 +95,10 @@ Client.prototype = {
 		  lastId - String - optional. Id of last tag in previous response.
 	 */
 	getTags: function (lastId) {
+		gs.info('getTags: lastId is ' + lastId);
 		var params = null;
-		
-		if (lastId != undefined) {
-			params = this.getTagsParams(lastId);
-		}
+		params = this.getTagsParams(lastId);
+		gs.info(params);
 		
 		var response = this.callApi(this.apis.tags, params);
 		
@@ -119,13 +124,13 @@ Client.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2017-11-28 11:42:39</sys_created_on>
         <sys_id>21d36304dbb203009b6cf7fdbf9619e9</sys_id>
-        <sys_mod_count>19</sys_mod_count>
+        <sys_mod_count>24</sys_mod_count>
         <sys_name>Client</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
         <sys_update_name>sys_script_include_21d36304dbb203009b6cf7fdbf9619e9</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-12-07 07:14:01</sys_updated_on>
+        <sys_updated_on>2017-12-07 11:47:31</sys_updated_on>
     </sys_script_include>
 </record_update>
