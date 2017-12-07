@@ -15,6 +15,10 @@ Client.prototype = {
 		hostsCount: {
 			path: '/qps/rest/2.0/count/am/hostasset',
 			method: 'get'
+		},
+		tags: {
+			path: '/qps/rest/2.0/search/am/tag',
+			method: 'post'
 		}
 	},
 
@@ -27,8 +31,10 @@ Client.prototype = {
 	/*
 	Calls given api, and returns response.
 	Return value is of RESTResponse type.
+	api: String API route
+	params: String XML payload or null.
 	*/
-	callApi: function (api) {
+	callApi: function (api, params) {
 		var request = new sn_ws.RESTMessageV2();
 		request.setEndpoint(this.sourceGr.server + api.path);
 		request.setHttpMethod(api.method);
@@ -54,9 +60,9 @@ Client.prototype = {
 			// test passed?
 			var xmlDoc = new XMLDocument2();
 			xmlDoc.parseXML(response.getBody());
-			var serviceResponse = xmlDoc.getNodeText('ServiceResponse/responseCode') || null;
+			var responseCode = xmlDoc.getNodeText('ServiceResponse/responseCode') || null;
 			
-			if (serviceResponse == 'SUCCESS') {
+			if (responseCode == 'SUCCESS') {
 				gs.info('1.0 | testConnection | Connection to ' + this.sourceGr.name + ' successful!');
 				return true;
 			}
@@ -65,19 +71,61 @@ Client.prototype = {
 				return false;
 			}
 		}
-	} // testConnection
+	}, // testConnection
+	
+	getTagsParams: function (lastId) {
+		var params = '<?xml version="1.0" encoding="UTF-8" ?>';
+		params += '<ServiceRequest>';
+		params += '<filters>';
+		params += '<Criteria field="id" operator="GREATER">' + lastId +'</Criteria>';
+		params += '</filters>';
+		params += '</ServiceRequest>';
+	},
+	
+	/*
+	    getTags - fetches tags based on given lastId (optional).
+		Returns XMLDocument2 object when API call is successful, false otherwise. Caller should read the XMLDocument2 object and parse out data.
+		Params:
+		  lastId - String - optional. Id of last tag in previous response.
+	 */
+	getTags: function (lastId) {
+		var params = null;
+		
+		if (lastId != undefined) {
+			params = this.getTagsParams(lastId);
+		}
+		
+		var response = this.callApi(this.apis.tags, params);
+		
+		if (200 != response.getStatusCode()) {
+			gs.error('1.0 | getTags | Error while geting tags from API source "' + this.sourceGr.name + '". API Response: ' + response.getbody());
+		}
+		else {
+			var xmlDoc = new XMLDocument2();
+			xmlDoc.parseXML(response.getBody());
+			var responseCode = xmlDoc.getNodeText('ServiceResponse/responseCode') || null;
+			
+			if ('SUCCESS' == responseCode) {
+				return xmlDoc;
+			}
+			else {
+				gs.error('1.0 | getTags | Recevied responseCode "' + responseCode + '" while geting tags from API source "' + this.sourceGr.name + '". API Response: ' + response.getBody());
+				return false;
+			}
+		}
+	}, // getTags 
 };]]></script>
         <sys_class_name>sys_script_include</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2017-11-28 11:42:39</sys_created_on>
         <sys_id>21d36304dbb203009b6cf7fdbf9619e9</sys_id>
-        <sys_mod_count>16</sys_mod_count>
+        <sys_mod_count>19</sys_mod_count>
         <sys_name>Client</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
         <sys_update_name>sys_script_include_21d36304dbb203009b6cf7fdbf9619e9</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-12-07 06:42:10</sys_updated_on>
+        <sys_updated_on>2017-12-07 07:14:01</sys_updated_on>
     </sys_script_include>
 </record_update>
