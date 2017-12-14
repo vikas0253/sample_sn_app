@@ -22,7 +22,7 @@ Util.prototype = {
 		// gs.info(JSON.stringify(tagObject));
 	},
 	
-	syncTags: function (sourceGr) {		
+	syncTags: function (sourceGr) {
 		if (sourceGr == undefined) {
 			sourceGr = new GlideRecord(this.tables.source);
 			sourceGr.addQuery('sync_tags', true);
@@ -30,27 +30,27 @@ Util.prototype = {
 		}
 		
 		while (sourceGr.next()) {
-			gs.info('Syncing tags from source "' + sourceGr.name + '".');
+			gs.info('1.0 | Syncing tags from source "' + sourceGr.name + '".');
 			
 			var client = new x_16255_cmdb_sync.Client(sourceGr);
 			var lastId;
 			var hasMoreRecords = true;
+			var fieldsToParse = ['id', 'name', 'ruleType'];
 			
 			while (hasMoreRecords) {
 				var xml = client.getTags(lastId);
 
-				if (xml != null) {
+				if (xml != false) {
 					// parse xml and add/update tags in table
 					var count = xml.getNodeText('ServiceResponse/count');
 					hasMoreRecords = xml.getNodeText('ServiceResponse/hasMoreRecords');
 					
-					gs.info('Received ' + count + ' tags from source "' + sourceGr.name + '".');
+					gs.info('1.0 | Received ' + count + ' tags from source "' + sourceGr.name + '".');
 
 					var tag = xml.getFirstNode('//data/Tag') || false;
 
 					while(tag) {
 						var childIterator = tag.getChildNodeIterator(); // interator over children of 'Tag'
-						var fieldsToParse = ['id', 'name', 'ruleType'];
 						var tagObject = {};
 
 						while (childIterator.hasNext()) {
@@ -65,34 +65,58 @@ Util.prototype = {
 						this.insertOrUpdateTag(tagObject);
 						tag = xml.getNextNode(tag);
 					} // while
-				} // if
-				
-				if (hasMoreRecords == 'false') {
-					hasMoreRecords = false;
-					gs.info('Pulled all tags from source "' + sourceGr.name + '".' );
+					
+					if (hasMoreRecords == 'false') {
+						hasMoreRecords = false;
+						gs.info('1.0 | Pulled all tags from source "' + sourceGr.name + '".' );
+					}
+					else {
+						hasMoreRecords = true;
+						lastId = xml.getNodeText('ServiceResponse/lastId');
+						gs.info('1.0 | Source "' + sourceGr.name + '" has more tags to pull. Pulled tags until id ' + lastId);
+					}
 				}
 				else {
-					hasMoreRecords = true;
-					lastId = xml.getNodeText('ServiceResponse/lastId');
-					gs.info('Source "' + sourceGr.name + '" has more tags to pull. Pulled tags until id ' + lastId);
-				}
-			}
+					gs.error('1.0 | Could not get tags from source "' + sourceGr.name + '".');
+				}// if-else				
+			} // while hasMoreRecords
 			
-			gs.info('Tag sync from source "' + sourceGr.name + '" completed.');
+			gs.info('1.0 | Tag sync from source "' + sourceGr.name + '" completed.');
 		} // while
 	}, // syncTags
+	
+	syncGroups: function (sourceGr) {
+		if (sourceGr == undefined) {
+			sourceGr = new GlideRecord(this.tables.source);
+			sourceGr.addQuery('sync_tags', true);
+			sourceGr.query();
+		}
+		
+		while (sourceGr.next()) {
+			gs.info('1.0 | Syncing groups from source "' + sourceGr.name + '".');
+			
+			var client = new x_16255_cmdb_sync.Client(sourceGr);
+			var xml = client.getGroups();
+			
+			if (xml != false) {
+				
+			}
+			gs.info('1.0 | Groups sync from source "' + sourceGr.name + '" completed.');
+		} // while
+
+	}
 };]]></script>
         <sys_class_name>sys_script_include</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2017-12-07 07:15:12</sys_created_on>
         <sys_id>dcfcf04bdb3203009b6cf7fdbf9619e1</sys_id>
-        <sys_mod_count>28</sys_mod_count>
+        <sys_mod_count>31</sys_mod_count>
         <sys_name>Util</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
         <sys_update_name>sys_script_include_dcfcf04bdb3203009b6cf7fdbf9619e1</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-12-07 12:00:59</sys_updated_on>
+        <sys_updated_on>2017-12-14 06:03:12</sys_updated_on>
     </sys_script_include>
 </record_update>
