@@ -19,7 +19,11 @@ Client.prototype = {
 		tags: {
 			path: '/qps/rest/2.0/search/am/tag',
 			method: 'post'
-		}
+		},
+		groups: {
+			path: '/api/2.0/fo/asset/group/?action=list&show_attributes=TITLE',
+			method: 'get'
+		},
 	},
 
 	initialize: function(sourceGr) {
@@ -119,18 +123,39 @@ Client.prototype = {
 			}
 		}
 	}, // getTags 
+	
+	getGroups: function () {
+		var response = this.callApi(this.apis.groups);
+		
+		if (200 != response.getStatusCode()) {
+			gs.error('1.0 | getGroups | Error while getting groups from API source "' + this.sourceGr.name + '". API Response: ' + response.getBody());
+		}
+		else {
+			var xmlDoc = new XMLDocument2();
+			xmlDoc.parseXML(response.getBody());
+			var errorText = xmlDoc.getNodeText("SIMPLE_RETURN/RESPONSE/TEXT") || false;
+			
+			if (errorText) {
+				gs.error('1.0 | getGroups | Error while getting groups from API source "' + this.sourceGr.name + '". Error: ' + errorText);
+				return false;
+			}
+			else {
+				return xmlDoc;
+			}
+		}
+	},
 };]]></script>
         <sys_class_name>sys_script_include</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2017-11-28 11:42:39</sys_created_on>
         <sys_id>21d36304dbb203009b6cf7fdbf9619e9</sys_id>
-        <sys_mod_count>26</sys_mod_count>
+        <sys_mod_count>30</sys_mod_count>
         <sys_name>Client</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
         <sys_update_name>sys_script_include_21d36304dbb203009b6cf7fdbf9619e9</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-12-07 11:56:09</sys_updated_on>
+        <sys_updated_on>2017-12-15 11:57:48</sys_updated_on>
     </sys_script_include>
 </record_update>
