@@ -13,13 +13,97 @@ Util.prototype = {
     },
 	
 	tables: {
-		source: 'x_16255_cmdb_sync_source'
+		source: 'x_16255_cmdb_sync_source',
+		tag: 'x_16255_cmdb_sync_tag',
+		group: 'x_16255_cmdb_sync_group'
 	},
 
     type: 'Util',
 	
-	insertOrUpdateTag: function (tagObject) {
-		// gs.info(JSON.stringify(tagObject));
+	/*
+	 * Params: 
+	 *   sourceGr - GlideRecord of Source table
+	 *   tagObject - Javascript Object containing id, name and ruleType keys
+	 * Returns:
+	 *   GlideRecord of Tag table - if given tag exists for given source, exiting GlideRecord, otherwise a new GlideRecord
+	 */
+	getTagGr: function (sourceGr, tagObject) {
+		var tagGr = new GlideRecord(this.tables.tag);
+		
+		tagGr.addQuery('source_sys_id', sourceGr.sys_id);
+		tagGr.addQuery('tag_id', tagObject.id);
+		tagGr.query();
+		
+		while (tagGr.next()) {
+			return tagGr;
+		}
+		// we are here, means there's no record found for given tag id on given source.
+		return new GlideRecord(this.tables.tag);
+	},
+	
+	/*
+	 * Params: 
+	 *   sourceGr - GlideRecord of Source table
+	 *   tagObject - Javascript object having these keys: id, name, ruleType
+	 * Returns:
+	 *   'insert', if new record is inserted
+	 *   'update', if existing record is updated
+	 *   false, if any error is encountered
+	 */
+	insertOrUpdateTag: function (sourceGr, tagObject) {
+		try {
+			var tagGr = this.getTagGr(sourceGr, tagObject);
+
+			if (tagGr.tag_id == tagObject.id) {
+				tagGr.setValue('tag_name', tagObject.name);
+				tagGr.update();
+				return 'update';
+			} else {
+				tagGr.setValue('source_sys_id', sourceGr.sys_id);
+				tagGr.setValue('tag_id', tagObject.id);
+				tagGr.setValue('tag_name', tagObject.name);
+				tagGr.setValue('tag_type', tagObject.ruleType);
+				tagGr.insert();
+				return 'insert';
+			}			
+		} catch (error) {
+			gs.error('1.0 | Error while inserting/updating tag id ' + tagObject.id + ' from source ' + sourceGr.name + '. Error: ' + error);
+			return false;
+		}
+	},
+	
+	getGroupGr: function (sourceGr, groupObject) {
+		var groupGr = new GlideRecord(this.tables.group);
+		
+		groupGr.addQuery('source_sys_id', sourceGr.sys_id);
+		groupGr.addQuery('group_id', groupObject.id);
+		groupGr.query();
+		
+		while (groupGr.next()) {
+			return groupGr;
+		}
+		// we are here, means there's no record found for given tag id on given source.
+		return new GlideRecord(this.tables.group);
+	},
+
+	insertOrUpdateGroup: function (sourceGr, groupObject) {
+		try {
+			var groupGr = this.getGroupGr(sourceGr, groupObject);
+			
+			if (groupGr.group_id == groupObject.id) {
+				groupGr.setValue('group_name', groupObject.name);
+				groupGr.update();
+				return 'update';
+			} else {
+				groupGr.setValue('source_sys_id', sourceGr.sys_id);
+				groupGr.setValue('group_id', groupObject.id);
+				groupGr.setValue('group_name', groupObject.name);
+				groupGr.insert();
+				return 'insert';
+			}
+		} catch (error) {
+			gs.error('1.0 | Error while inserting/updating group id ' + groupObject.id + ' from source "' + sourceGr.name + '". Error: ' + error);
+		}
 	},
 	
 	syncTags: function (sourceGr) {
@@ -36,6 +120,9 @@ Util.prototype = {
 			var lastId;
 			var hasMoreRecords = true;
 			var fieldsToParse = ['id', 'name', 'ruleType'];
+			var insertCount = 0;
+			var updateCount = 0;
+			var errorCount = 0;
 			
 			while (hasMoreRecords) {
 				var xml = client.getTags(lastId);
@@ -62,13 +149,17 @@ Util.prototype = {
 							}
 						} // while - child
 
-						this.insertOrUpdateTag(tagObject);
+						var response = this.insertOrUpdateTag(sourceGr, tagObject);
+						if (response == 'insert') insertCount++;
+						else if (response == 'update') updateCount++;
+						else errorCount++;
+						
 						tag = xml.getNextNode(tag);
 					} // while
 					
 					if (hasMoreRecords == 'false') {
 						hasMoreRecords = false;
-						gs.info('1.0 | Pulled all tags from source "' + sourceGr.name + '".' );
+						gs.info('1.0 | Pulled all tags from source "' + sourceGr.name + '". New: ' + insertCount + ' Updated: ' + updateCount + ' Error: ' + errorCount);
 					}
 					else {
 						hasMoreRecords = true;
@@ -98,6 +189,9 @@ Util.prototype = {
 			var client = new x_16255_cmdb_sync.Client(sourceGr);
 			var xml = client.getGroups();
 			var rootElement = xml.getDocumentElement();
+			var insertCount = 0;
+			var updateCount = 0;
+			var errorCount  = 0;
 			
 			if (xml != false) {
 				var group = xml.getFirstNode('//ASSET_GROUP_LIST/ASSET_GROUP') || false;
@@ -107,7 +201,12 @@ Util.prototype = {
 					
 					var id = xml.getNodeText("//ID");
 					var title = xml.getNodeText("//TITLE");
-					gs.info(id + " -- " + title);
+					var groupObject = {id: id, title: title};
+					
+					var response = this.insertOrUpdateGroup(sourceGr, groupObject);
+					if (response == 'insert') insertCount++;
+					else if (response == 'update') updateCount++;
+					else errorCount++;
 					
 					xml.setCurrentElement(rootElement);
 					group = xml.getNextNode(group);
@@ -121,13 +220,13 @@ Util.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2017-12-07 07:15:12</sys_created_on>
         <sys_id>dcfcf04bdb3203009b6cf7fdbf9619e1</sys_id>
-        <sys_mod_count>37</sys_mod_count>
+        <sys_mod_count>48</sys_mod_count>
         <sys_name>Util</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
         <sys_update_name>sys_script_include_dcfcf04bdb3203009b6cf7fdbf9619e1</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-12-15 13:26:45</sys_updated_on>
+        <sys_updated_on>2018-01-10 15:06:58</sys_updated_on>
     </sys_script_include>
 </record_update>

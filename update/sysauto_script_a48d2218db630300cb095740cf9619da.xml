@@ -4,29 +4,29 @@
         <active>true</active>
         <condition/>
         <conditional>false</conditional>
-        <name>Tag Sync Job</name>
+        <name>Tags Sync Job</name>
         <run_as display_value="System Administrator">6816f79cc0a8016401c5a33be04be441</run_as>
         <run_as_tz/>
         <run_dayofmonth>1</run_dayofmonth>
         <run_dayofweek>1</run_dayofweek>
         <run_period/>
-        <run_start>2017-12-07 10:58:50</run_start>
+        <run_start>2018-01-05 09:10:09</run_start>
         <run_time>1970-01-01 08:00:00</run_time>
         <run_type>on_demand</run_type>
         <script><![CDATA[var util = new x_16255_cmdb_sync.Util();
 util.syncTags();]]></script>
         <sys_class_name>sysauto_script</sys_class_name>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2017-12-07 10:59:27</sys_created_on>
-        <sys_id>f540f183dbb203009b6cf7fdbf9619ae</sys_id>
+        <sys_created_on>2018-01-05 09:11:20</sys_created_on>
+        <sys_id>a48d2218db630300cb095740cf9619da</sys_id>
         <sys_mod_count>1</sys_mod_count>
-        <sys_name>Tag Sync Job</sys_name>
+        <sys_name>Tags Sync Job</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy/>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
-        <sys_update_name>sysauto_script_f540f183dbb203009b6cf7fdbf9619ae</sys_update_name>
+        <sys_update_name>sysauto_script_a48d2218db630300cb095740cf9619da</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-12-07 11:36:34</sys_updated_on>
+        <sys_updated_on>2018-01-10 14:51:18</sys_updated_on>
         <upgrade_safe>false</upgrade_safe>
     </sysauto_script>
 </record_update>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_embedded_tour_step">
+    <sys_embedded_tour_step action="INSERT_OR_UPDATE">
+        <action>false</action>
+        <action_event>next</action_event>
+        <action_target/>
+        <action_target_ref display_value="4969aef0db330300cb095740cf961957.1.xpath">78c9e234db330300cb095740cf961973</action_target_ref>
+        <active>true</active>
+        <content><![CDATA[Edit and set Server URL (if your server is other than default one).]]></content>
+        <guide display_value="CMDB Sync: Create source">4969aef0db330300cb095740cf961957</guide>
+        <implicit>false</implicit>
+        <link/>
+        <name>Step 1</name>
+        <options/>
+        <order>1</order>
+        <placement>left</placement>
+        <sys_class_name>sys_embedded_tour_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-01-19 08:26:27</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>70c9ea30db330300cb095740cf961935</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Step 1</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
+        <sys_update_name>sys_embedded_tour_step_70c9ea30db330300cb095740cf961935</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-01-19 08:26:27</sys_updated_on>
+        <target/>
+        <target_ref display_value="4969aef0db330300cb095740cf961957.1.xpath">78c9e234db330300cb095740cf961973</target_ref>
+        <ui_version>dynamic</ui_version>
+        <view/>
+        <window>x_16255_cmdb_sync_source.do</window>
+    </sys_embedded_tour_step>
+    <sys_translated_text action="delete_multiple" query="documentkey=70c9ea30db330300cb095740cf961935"/>
+</record_update>
