@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <element label="Group" max_length="40" name="x_16255_cmdb_sync_group" type="collection">
+        <element label="Group ID" max_length="255" name="group_id" type="string_full_utf8"/>
+        <element label="Group Name" max_length="255" name="group_name" type="string_full_utf8"/>
+    </element>
+</database>

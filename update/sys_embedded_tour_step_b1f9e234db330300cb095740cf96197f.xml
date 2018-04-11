@@ -6,7 +6,7 @@
         <action_target/>
         <action_target_ref display_value="4969aef0db330300cb095740cf961957.3.xpath">65f9e234db330300cb095740cf961976</action_target_ref>
         <active>true</active>
-        <content><![CDATA[Set your password here. Don't worry, it will be saved in encrypted format.]]></content>
+        <content><![CDATA[Set your password here. Don&#39;t worry, it will be saved in encrypted format.]]></content>
         <guide display_value="CMDB Sync: Create source">4969aef0db330300cb095740cf961957</guide>
         <implicit>false</implicit>
         <link/>
