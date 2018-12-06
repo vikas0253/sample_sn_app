@@ -48,7 +48,7 @@ Util.prototype = {
 	 * Returns:
 	 *   'insert', if new record is inserted
 	 *   'update', if existing record is updated
-	 *   false, if any error is encountered
+	 *   'error', if any error is encountered
 	 */
 	insertOrUpdateTag: function (sourceGr, tagObject) {
 		try {
@@ -68,7 +68,7 @@ Util.prototype = {
 			}			
 		} catch (error) {
 			gs.error('1.0 | Error while inserting/updating tag id ' + tagObject.id + ' from source ' + sourceGr.name + '. Error: ' + error);
-			return false;
+			return 'error';
 		}
 	},
 	
@@ -86,6 +86,15 @@ Util.prototype = {
 		return new GlideRecord(this.tables.group);
 	},
 
+	/*
+	 * Params: 
+	 *   sourceGr - GlideRecord of Source table
+	 *   groupObject - Javascript object having these keys: id, name
+	 * Returns:
+	 *   'insert', if new record is inserted
+	 *   'update', if existing record is updated
+	 *   'error', if any error is encountered
+	 */	
 	insertOrUpdateGroup: function (sourceGr, groupObject) {
 		try {
 			var groupGr = this.getGroupGr(sourceGr, groupObject);
@@ -103,6 +112,7 @@ Util.prototype = {
 			}
 		} catch (error) {
 			gs.error('1.0 | Error while inserting/updating group id ' + groupObject.id + ' from source "' + sourceGr.name + '". Error: ' + error);
+			return 'error';
 		}
 	},
 	
@@ -152,7 +162,7 @@ Util.prototype = {
 						var response = this.insertOrUpdateTag(sourceGr, tagObject);
 						if (response == 'insert') insertCount++;
 						else if (response == 'update') updateCount++;
-						else errorCount++;
+						else if (response == 'error') errorCount++;
 						
 						tag = xml.getNextNode(tag);
 					} // while
@@ -206,7 +216,7 @@ Util.prototype = {
 					var response = this.insertOrUpdateGroup(sourceGr, groupObject);
 					if (response == 'insert') insertCount++;
 					else if (response == 'update') updateCount++;
-					else errorCount++;
+					else if (response == 'error') errorCount++;
 					
 					xml.setCurrentElement(rootElement);
 					group = xml.getNextNode(group);
@@ -220,13 +230,13 @@ Util.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2017-12-07 07:15:12</sys_created_on>
         <sys_id>dcfcf04bdb3203009b6cf7fdbf9619e1</sys_id>
-        <sys_mod_count>48</sys_mod_count>
+        <sys_mod_count>49</sys_mod_count>
         <sys_name>Util</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
         <sys_update_name>sys_script_include_dcfcf04bdb3203009b6cf7fdbf9619e1</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-01-10 15:06:58</sys_updated_on>
+        <sys_updated_on>2018-12-06 08:24:06</sys_updated_on>
     </sys_script_include>
 </record_update>
