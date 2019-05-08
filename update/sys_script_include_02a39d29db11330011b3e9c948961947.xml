@@ -18,6 +18,8 @@ DownloadProcessor.prototype = {
 		attachment: 'sys_attachment'
 	},
 	
+	xmlDoc: null,
+	
 	run: function () {
 		var queueGr = new GlideRecord(this.tables.queue);
 		queueGr.addQuery('status', 'Queued');
@@ -26,12 +28,15 @@ DownloadProcessor.prototype = {
 		queueGr.orderBy('sys_created_on');
 		queueGr.query();
 		
+		gs.info("No. of records found: " + queueGr.getRowCount());
+		
 		while (queueGr.next()) {
 			var result = this.process(queueGr);
 			if (result.successful) {
 				queueGr.status = 'Success';
 			} else {
 				queueGr.status = 'Error';
+				queueGr.message = result.message;
 			}
 			queueGr.update();
 		}
@@ -46,12 +51,86 @@ DownloadProcessor.prototype = {
 			message: ''
 		};
 		
-		// get attachment as stream
-		var xmlStream = this.getAttachmentStream(queueGr);
-		gs.info(xmlStream);
-		
-		return result;
+		try {
+			// get attachment as stream
+			var xmlStream = this.getAttachmentStream(queueGr);
+			this.xmlDoc = new XMLDocument2(xmlStream);
+			var documentRoot = this.xmlDoc.getDocumentElement();
+			
+			var responseCode = this.xmlDoc.getNodeText("//assetDetailsResponse/responseCode");
+			var assetsCount  = this.xmlDoc.getNodeText("//assetDetailsResponse/count");
+			gs.info("responseCode: " + responseCode + " assetsCount: " + assetsCount);
+			
+			var asset = this.xmlDoc.getFirstNode('//assetDetailsResponse//assetListData/asset') || false;
+			while (asset) {
+				this.xmlDoc.setCurrentElement(asset);
+				
+				// get software list
+				var softwareList = this.xmlDoc.getNode('//softwareListData');
+				var softwareResult = this.processSoftware(softwareList);
+				gs.info("Processed " + softwareResult.count + " software entries.");
+				
+				this.xmlDoc.setCurrentElement(documentRoot);
+				// move to next asset.
+				asset = this.xmlDoc.getNextNode(asset);
+			} // while assetNode
+		} catch (error) {
+			gs.error(error);
+			result.successful = false;
+			result.message = error;
+		} finally {
+			return result;
+		}
 	},
+	
+	processSoftware: function (softwareList) {
+		gs.info("softwareList node name: " + softwareList.getNodeName());
+		
+		var returnValue = {
+			count: 0,
+		};
+		try {
+			var softwareIterator = softwareList.getChildNodeIterator();
+
+			while (softwareIterator.hasNext()) {
+				var software = softwareIterator.next();
+				var softwareXml = new XMLDocument2();
+				softwareXml.parseXML(software.toString());
+
+				var fullName = softwareXml.getNodeText('//fullName');
+				var softwareType = softwareXml.getNodeText('//softwareType');
+				var isIgnored = softwareXml.getNodeText('//isIgnored');
+				var ignoredReason = softwareXml.getNodeText('//ignoredReason');
+				var categoryType = softwareXml.getNodeText('//categoryType');
+				var category = softwareXml.getNodeText('//category');
+				var category1 = softwareXml.getNodeText('//category1');
+				var category2 = softwareXml.getNodeText('//category2');
+				var productName = softwareXml.getNodeText('//productName');                
+				var component = softwareXml.getNodeText('//component');
+				var publisher = softwareXml.getNodeText('//publisher');
+/*               <edition />
+               <marketVersion />
+               <version />
+               <update />
+               <architecture />
+               <installDate />
+               <language />
+               <lifecycle>
+                  <gaDate />
+                  <stage />
+               </lifecycle>
+               <license>
+                  <category />
+               </license>
+*/
+				returnValue.count++;
+			}			
+		} catch (error) {
+			gs.error(error);
+		} finally {
+			return returnValue;
+		}
+	}, // processSoftware
 	
 	// TODO: move this function to util
 	getAttachmentStream: function (gr) {
@@ -73,13 +152,13 @@ DownloadProcessor.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2019-05-08 16:02:53</sys_created_on>
         <sys_id>02a39d29db11330011b3e9c948961947</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>18</sys_mod_count>
         <sys_name>DownloadProcessor</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
         <sys_update_name>sys_script_include_02a39d29db11330011b3e9c948961947</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2019-05-08 16:29:36</sys_updated_on>
+        <sys_updated_on>2019-05-08 18:22:53</sys_updated_on>
     </sys_script_include>
 </record_update>
