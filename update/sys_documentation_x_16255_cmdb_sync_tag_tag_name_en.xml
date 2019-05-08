@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update>
+<?xml version="1.0" encoding="UTF-8"?><record_update>
     <sys_documentation element="tag_name" label="Tag Name" language="en" table="x_16255_cmdb_sync_tag">
         <sys_documentation action="INSERT_OR_UPDATE">
             <element>tag_name</element>
@@ -12,7 +11,7 @@
             <sys_class_name>sys_documentation</sys_class_name>
             <sys_created_by>admin</sys_created_by>
             <sys_created_on>2017-12-07 12:25:37</sys_created_on>
-            <sys_id>45248acbdbb203009b6cf7fdbf96192f</sys_id>
+            <sys_id>52425da5db11330011b3e9c94896197b</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_name>Tag Name</sys_name>
             <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>

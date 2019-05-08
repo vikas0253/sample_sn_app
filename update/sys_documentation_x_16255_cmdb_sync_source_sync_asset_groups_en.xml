@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update>
+<?xml version="1.0" encoding="UTF-8"?><record_update>
     <sys_documentation element="sync_asset_groups" label="Sync Asset Groups" language="en" table="x_16255_cmdb_sync_source">
         <sys_documentation action="INSERT_OR_UPDATE">
             <element>sync_asset_groups</element>
@@ -12,7 +11,7 @@
             <sys_class_name>sys_documentation</sys_class_name>
             <sys_created_by>admin</sys_created_by>
             <sys_created_on>2017-11-28 11:32:42</sys_created_on>
-            <sys_id>8eb1ab80dbb203009b6cf7fdbf961935</sys_id>
+            <sys_id>c6425da5db11330011b3e9c948961950</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_name>Sync Asset Groups</sys_name>
             <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>

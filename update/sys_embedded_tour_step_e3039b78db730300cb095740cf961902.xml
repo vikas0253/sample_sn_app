@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update sys_domain="global" table="sys_embedded_tour_step">
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_embedded_tour_step">
     <sys_embedded_tour_step action="INSERT_OR_UPDATE">
         <action>false</action>
         <action_event>next</action_event>
@@ -14,6 +13,7 @@
         <options/>
         <order>0</order>
         <placement>right</placement>
+        <step_type/>
         <sys_class_name>sys_embedded_tour_step</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2018-01-19 11:26:51</sys_created_on>
@@ -31,6 +31,7 @@
         <sys_updated_on>2018-01-19 11:26:56</sys_updated_on>
         <target/>
         <target_ref display_value=".module-node [data-id=&quot;82b1ab80dbb203009">9303db38db730300cb095740cf961982</target_ref>
+        <title/>
         <ui_version>dynamic</ui_version>
         <view/>
         <window>nav_to.do</window>

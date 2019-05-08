@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<record_update>
+<?xml version="1.0" encoding="UTF-8"?><record_update>
     <sys_choice action="INSERT_OR_UPDATE" field="status" table="x_16255_cmdb_sync_queue" version="3">
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
@@ -102,7 +101,7 @@
             <sys_class_name>sys_choice_set</sys_class_name>
             <sys_created_by>admin</sys_created_by>
             <sys_created_on>2017-12-15 08:03:24</sys_created_on>
-            <sys_id>04751f04db1223005440eb41ca961933</sys_id>
+            <sys_id>4c52dda5db11330011b3e9c9489619a0</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_name>status</sys_name>
             <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>

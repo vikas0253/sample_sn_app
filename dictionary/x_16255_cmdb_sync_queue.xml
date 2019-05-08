@@ -1,15 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<database>
+<?xml version="1.0" encoding="UTF-8"?><database>
     <element label="Queue" max_length="40" name="x_16255_cmdb_sync_queue" type="collection">
         <element label="Message" max_length="255" name="message" type="string_full_utf8"/>
         <element label="Processor GUID" max_length="255" name="processor_guid" type="string_full_utf8"/>
         <element choice="3" default="New" label="Status" max_length="40" name="status" type="choice">
             <choice>
-                <element hint="Newly enqueued" label="New" sequence="100" value="New"/>
-                <element hint="Queued with attachment" label="Queued" sequence="200" value="Queued"/>
-                <element hint="Attachment being processed" label="Processing" sequence="300" value="Processing"/>
-                <element hint="Attachment processed successfully" label="Success" sequence="400" value="Success"/>
-                <element hint="Error while processing attachment" label="Error" sequence="500" value="Eror"/>
+                <element hint="Newly enqueued" inactive_on_update="false" label="New" sequence="100" value="New"/>
+                <element hint="Queued with attachment" inactive_on_update="false" label="Queued" sequence="200" value="Queued"/>
+                <element hint="Attachment being processed" inactive_on_update="false" label="Processing" sequence="300" value="Processing"/>
+                <element hint="Attachment processed successfully" inactive_on_update="false" label="Success" sequence="400" value="Success"/>
+                <element hint="Error while processing attachment" inactive_on_update="false" label="Error" sequence="500" value="Eror"/>
             </choice>
         </element>
         <element label="Type" max_length="255" name="type" type="string_full_utf8"/>

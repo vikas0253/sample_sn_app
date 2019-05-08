@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<database>
+<?xml version="1.0" encoding="UTF-8"?><database>
     <element label="Source" max_length="40" name="x_16255_cmdb_sync_source" type="collection">
         <element label="Downstream Count" max_length="40" name="downstream_count" type="string"/>
         <element default="true" label="Downstream Sync" max_length="40" name="downstream_sync" type="boolean"/>

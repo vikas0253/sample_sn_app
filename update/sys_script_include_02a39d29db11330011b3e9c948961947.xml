@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_16255_cmdb_sync.DownloadProcessor</api_name>
+        <client_callable>false</client_callable>
+        <description>Parses  downloaded XML files and puts data in staging tables.</description>
+        <name>DownloadProcessor</name>
+        <script><![CDATA[var DownloadProcessor = Class.create();
+DownloadProcessor.prototype = {
+    initialize: function() {
+    },
+
+    type: 'DownloadProcessor',
+	
+	tables: {
+		queue: 'x_16255_cmdb_sync_queue',
+		attachment: 'sys_attachment'
+	},
+	
+	run: function () {
+		var queueGr = new GlideRecord(this.tables.queue);
+		queueGr.addQuery('status', 'Queued');
+		queueGr.addQuery('type', 'Download');
+		queueGr.setLimit(1); // pick up only 1 record at a time
+		queueGr.orderBy('sys_created_on');
+		queueGr.query();
+		
+		while (queueGr.next()) {
+			var result = this.process(queueGr);
+			if (result.successful) {
+				queueGr.status = 'Success';
+			} else {
+				queueGr.status = 'Error';
+			}
+			queueGr.update();
+		}
+	},
+	
+	/*
+	process
+	*/
+	process: function (queueGr) {
+		var result = {
+			successful: true,
+			message: ''
+		};
+		
+		// get attachment as stream
+		var xmlStream = this.getAttachmentStream(queueGr);
+		gs.info(xmlStream);
+		
+		return result;
+	},
+	
+	// TODO: move this function to util
+	getAttachmentStream: function (gr) {
+		var attachmentGr = new GlideRecord(this.tables.attachment);
+		attachmentGr.addQuery('table_name', gr.getTableName());
+		attachmentGr.addQuery('table_sys_id', gr.sys_id);
+		attachmentGr.query();
+		
+		var stream = null;
+		while (attachmentGr.next()) {
+			var sa = new GlideSysAttachment();
+			stream = sa.getContentStream(attachmentGr.sys_id.toString());
+		}
+		
+		return stream;
+	}, // getAttachmentStream
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-05-08 16:02:53</sys_created_on>
+        <sys_id>02a39d29db11330011b3e9c948961947</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>DownloadProcessor</sys_name>
+        <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
+        <sys_update_name>sys_script_include_02a39d29db11330011b3e9c948961947</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-05-08 16:29:36</sys_updated_on>
+    </sys_script_include>
+</record_update>
