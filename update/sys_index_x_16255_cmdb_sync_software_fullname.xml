@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_index">
+    <sys_index action="INSERT_OR_UPDATE">
+        <col_name_string>fullname</col_name_string>
+        <index_col_name element="fullname" name="x_16255_cmdb_sync_software">d6633cf1db51330011b3e9c9489619fb</index_col_name>
+        <logical_table_name>x_16255_cmdb_sync_software</logical_table_name>
+        <sys_class_name>sys_index</sys_class_name>
+        <sys_created_by>system</sys_created_by>
+        <sys_created_on>2019-05-09 08:39:32</sys_created_on>
+        <sys_id>7fe77839db51330011b3e9c948961986</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_16255_cmdb_sync_software</sys_name>
+        <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
+        <sys_update_name>sys_index_x_16255_cmdb_sync_software_fullname</sys_update_name>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2019-05-09 08:39:32</sys_updated_on>
+        <table display_value="Software" name="x_16255_cmdb_sync_software">d5633c75db51330011b3e9c948961977</table>
+        <unique_index>true</unique_index>
+    </sys_index>
+</record_update>

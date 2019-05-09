@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Software Relation" max_length="40" name="x_16255_cmdb_sync_software_relation" type="collection">
+        <element label="Asset" max_length="32" name="asset" reference="x_16255_cmdb_sync_asset" type="reference"/>
+        <element label="Software" max_length="32" name="software" reference="x_16255_cmdb_sync_software" type="reference"/>
+        <index name="index">
+            <element name="software"/>
+        </index>
+        <index name="index2">
+            <element name="asset"/>
+        </index>
+    </element>
+</database>

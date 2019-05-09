@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Asset" max_length="40" name="x_16255_cmdb_sync_asset" type="collection">
+        <element label="Asset ID" max_length="40" name="assetid" type="string"/>
+        <element label="Asset Name" max_length="40" name="assetname" type="string"/>
+        <element label="Asset UUID" max_length="40" name="assetuuid" type="string"/>
+        <element label="BIOS Description" max_length="40" name="biosdescription" type="string"/>
+        <index name="index">
+            <element name="assetuuid"/>
+        </index>
+    </element>
+</database>

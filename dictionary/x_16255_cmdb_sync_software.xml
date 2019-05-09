@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Software" max_length="40" name="x_16255_cmdb_sync_software" type="collection">
+        <element label="Full Name" max_length="40" name="fullname" type="string"/>
+        <element label="Ignored Reason" max_length="40" name="ignoredreason" type="string"/>
+        <element label="Is Ignored" max_length="40" name="isignored" type="boolean"/>
+        <element label="Software Type" max_length="40" name="softwaretype" type="string"/>
+        <index name="index">
+            <element name="fullname"/>
+        </index>
+    </element>
+</database>

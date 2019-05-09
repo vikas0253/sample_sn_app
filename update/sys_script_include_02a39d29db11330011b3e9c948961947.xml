@@ -15,14 +15,17 @@ DownloadProcessor.prototype = {
 	
 	tables: {
 		queue: 'x_16255_cmdb_sync_queue',
-		attachment: 'sys_attachment'
+		attachment: 'sys_attachment',
+		asset: 'x_16255_cmdb_sync_asset',
+		software: 'x_16255_cmdb_sync_software',
+		softwareRelation: 'x_16255_cmdb_sync_software_relation'
 	},
 	
 	xmlDoc: null,
 	
 	run: function () {
 		var queueGr = new GlideRecord(this.tables.queue);
-		queueGr.addQuery('status', 'Queued');
+		// queueGr.addQuery('status', 'Queued'); // TODO: uncomment this line.
 		queueGr.addQuery('type', 'Download');
 		queueGr.setLimit(1); // pick up only 1 record at a time
 		queueGr.orderBy('sys_created_on');
@@ -62,12 +65,17 @@ DownloadProcessor.prototype = {
 			gs.info("responseCode: " + responseCode + " assetsCount: " + assetsCount);
 			
 			var asset = this.xmlDoc.getFirstNode('//assetDetailsResponse//assetListData/asset') || false;
+			
 			while (asset) {
 				this.xmlDoc.setCurrentElement(asset);
 				
+				// process asset data
+				var assetResult = this.processAsset(asset);
+				gs.info("Asset record " + assetResult.action);
+				
 				// get software list
 				var softwareList = this.xmlDoc.getNode('//softwareListData');
-				var softwareResult = this.processSoftware(softwareList);
+				var softwareResult = this.processSoftware(softwareList, assetResult.sys_id);
 				gs.info("Processed " + softwareResult.count + " software entries.");
 				
 				this.xmlDoc.setCurrentElement(documentRoot);
@@ -83,13 +91,112 @@ DownloadProcessor.prototype = {
 		}
 	},
 	
-	processSoftware: function (softwareList) {
+	processAsset: function (asset) {
+		var result = {
+			action: 'could not process',
+			message: null,
+			sys_id: null
+		};
+
+		try {
+			var assetId = this.xmlDoc.getNodeText('//assetId');
+			var assetUUID = this.xmlDoc.getNodeText('//assetUUID');
+			var hostId = this.xmlDoc.getNodeText('//hostId');
+			var lastModifiedDate = this.xmlDoc.getNodeText('//lastModifiedDate');
+			var address = this.xmlDoc.getNodeText('//address');
+			var dnsName = this.xmlDoc.getNodeText('//dnsName');
+			var assetName = this.xmlDoc.getNodeText('//assetName');
+			var netbiosName = this.xmlDoc.getNodeText('//netbiosName');
+			var timeZone = this.xmlDoc.getNodeText('//timeZone');
+			var biosDescription = this.xmlDoc.getNodeText('//biosDescription');
+			var lastBoot = this.xmlDoc.getNodeText('//lastBoot');
+			var totalMemory = this.xmlDoc.getNodeText('//totalMemory');
+			var cpuCount = this.xmlDoc.getNodeText('//cpuCount');
+			var lastLoggedOnUser = this.xmlDoc.getNodeText('//lastLoggedOnUser');
+			var mostFrequentUser = this.xmlDoc.getNodeText('//mostFrequentUser');
+			var hwSerialNumber = this.xmlDoc.getNodeText('//hwSerialNumber');
+			var biosSerialNumber = this.xmlDoc.getNodeText('//biosSerialNumber');
+			var biosAssetTag = this.xmlDoc.getNodeText('//biosAssetTag');
+			var isContainerHost = this.xmlDoc.getNodeText('//isContainerHost');
+			var os_name = this.xmlDoc.getNode('//operatingSystem/osName');
+			var os_fullName = this.xmlDoc.getNode('//operatingSystem/fullName');
+			var os_categoryType = this.xmlDoc.getNode('//operatingSystem/categoryType');
+			var os_category = this.xmlDoc.getNode('//operatingSystem/category');
+			var os_category1 = this.xmlDoc.getNode('//operatingSystem/category1');
+			var os_category2 = this.xmlDoc.getNode('//operatingSystem/category2');
+			var os_productName = this.xmlDoc.getNode('//operatingSystem/productName');
+			var os_publisher = this.xmlDoc.getNode('//operatingSystem/publisher');
+			var os_edition = this.xmlDoc.getNode('//operatingSystem/edition');
+			var os_marketVersion = this.xmlDoc.getNode('//operatingSystem/marketVersion');
+			var os_version = this.xmlDoc.getNode('//operatingSystem/version');
+			var os_update = this.xmlDoc.getNode('//operatingSystem/update');
+			var os_architecture = this.xmlDoc.getNode('//operatingSystem/architecture');
+			var os_lifecycle_gaDate = this.xmlDoc.getNode('//operatingSystem/lifecycle/gaDate');
+			var os_lifecycle_stage = this.xmlDoc.getNode('//operatingSystem/lifecycle/stage');
+			var hardware_fullName = this.xmlDoc.getNode('//hardware/fullName');
+			var hardware_categoryType = this.xmlDoc.getNode('//hardware/categoryType');
+			var hardware_category = this.xmlDoc.getNode('//hardware/category');
+			var hardware_category1 = this.xmlDoc.getNode('//hardware/category1');
+			var hardware_category2 = this.xmlDoc.getNode('//hardware/category2');
+			var hardware_manufacturer = this.xmlDoc.getNode('//hardware/manufacturer');
+			var hardware_productName = this.xmlDoc.getNode('//hardware/productName');
+			var hardware_model = this.xmlDoc.getNode('//hardware/model');
+			var hardware_lifecycle_gaDate = this.xmlDoc.getNode('//hardware/lifecycle/gaDate');
+			var hardware_lifecycle_stage = this.xmlDoc.getNode('//hardware/lifecycle/stage');
+			
+			gs.info("assetId: " + assetId + " assetUUID: " + assetUUID);
+			
+			var assetGr = this.getAssetGr(assetUUID);
+			gs.info("asset sys_id: " + assetGr.sys_id);
+			
+			if (assetGr.assetuuid == assetUUID) {
+				result.action = 'updated';
+			} else {
+				result.action = 'inserted';
+			}
+			result.sys_id = assetGr.sys_id;
+			
+			assetGr.assetid = assetId;
+			assetGr.assetuuid = assetUUID;
+			assetGr.assetname = assetName;
+			assetGr.biosdescription = biosDescription;
+			assetGr.update();
+		} catch (error) {
+			result.message = error;
+		} finally {
+			return result;
+		}
+	}, // processAsset
+	
+	getAssetGr: function (assetUUID) {
+		var assetGr = new GlideRecord(this.tables.asset);
+		
+		assetGr.addQuery('assetuuid', assetUUID);
+		assetGr.query();
+		
+		while (assetGr.next()) {
+			return assetGr;
+		}
+		// we are here, means there's no record found for given asset uuid on given source.
+		assetGr = new GlideRecord(this.tables.asset);
+		var sys_id = assetGr.insert();
+		assetGr.get(sys_id);
+		return assetGr;
+	}, // getAssetGr
+	
+	processSoftware: function (softwareList, assetSysId) {
 		gs.info("softwareList node name: " + softwareList.getNodeName());
 		
 		var returnValue = {
 			count: 0,
+			updated: 0,
+			inserted: 0,
 		};
 		try {
+			var softwareRelationGr = new GlideRecord(this.tables.softwareRelation);
+			softwareRelationGr.addQuery('asset', assetSysId);
+			softwareRelationGr.deleteMultiple();
+			
 			var softwareIterator = softwareList.getChildNodeIterator();
 
 			while (softwareIterator.hasNext()) {
@@ -118,7 +225,27 @@ DownloadProcessor.prototype = {
 				var lifecycleGaDate = softwareXml.getNodeText('//lifecycle/gaDate');
 				var lifecycleStage = softwareXml.getNodeText('//lifecycle/stage');
 				var licenseCategory = softwareXml.getNodeText('//license/category');
-
+				
+				// add software to master table, if not already present
+				var softwareGr = this.getSoftwareGr(fullName);
+				if (softwareGr.fullname == fullName) {
+					returnValue.updated++;
+				} else {
+					returnValue.inserted++;
+				}
+				
+				softwareGr.fullname = fullName;
+				softwareGr.ignoredreason = ignoredReason;
+				softwareGr.isignored = isIgnored;
+				softwareGr.softwaretype = softwareType;
+				softwareGr.update();
+				
+				// add software-asset pair in software relation table
+				softwareRelationGr = new GlideRecord(this.tables.softwareRelation);
+				softwareRelationGr.asset = assetSysId;
+				softwareRelationGr.software = softwareGr.sys_id;
+				softwareRelationGr.insert();
+				
 				returnValue.count++;
 			}			
 		} catch (error) {
@@ -127,6 +254,22 @@ DownloadProcessor.prototype = {
 			return returnValue;
 		}
 	}, // processSoftware
+
+	getSoftwareGr: function (fullName) {
+		var softwareGr = new GlideRecord(this.tables.software);
+		
+		softwareGr.addQuery('fullname', fullName);
+		softwareGr.query();
+		
+		while (softwareGr.next()) {
+			return softwareGr;
+		}
+		// we are here, means there's no record found for given asset uuid on given source.
+		softwareGr = new GlideRecord(this.tables.software);
+		var sys_id = softwareGr.insert();
+		softwareGr.get(sys_id);
+		return softwareGr;
+	}, // getAssetGr
 	
 	// TODO: move this function to util
 	getAttachmentStream: function (gr) {
@@ -148,13 +291,13 @@ DownloadProcessor.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2019-05-08 16:02:53</sys_created_on>
         <sys_id>02a39d29db11330011b3e9c948961947</sys_id>
-        <sys_mod_count>19</sys_mod_count>
+        <sys_mod_count>27</sys_mod_count>
         <sys_name>DownloadProcessor</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
         <sys_update_name>sys_script_include_02a39d29db11330011b3e9c948961947</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2019-05-09 06:18:38</sys_updated_on>
+        <sys_updated_on>2019-05-09 09:25:23</sys_updated_on>
     </sys_script_include>
 </record_update>
