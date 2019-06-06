@@ -199,9 +199,14 @@ DownloadProcessor.prototype = {
 			
 			var softwareIterator = softwareList.getChildNodeIterator();
 
+			//gs.info("softwareIterator-->"+softwareIterator.getTextContent());
 			while (softwareIterator.hasNext()) {
-				var software = softwareIterator.next();
-				var softwareXml = new XMLDocument2();
+				
+				var software = softwareIterator.next();	
+				if(software.toString().trim().length == 0){continue;}
+				gs.info("software iterator object--->"+ software.toString().trim().length);
+				//gs.info("software iterator object--->"+ software.toString().trim() == "");
+				/*var softwareXml = new XMLDocument2();
 				softwareXml.parseXML(software.toString());
 
 				var fullName = softwareXml.getNodeText('//fullName');
@@ -245,7 +250,7 @@ DownloadProcessor.prototype = {
 				softwareRelationGr.asset = assetSysId;
 				softwareRelationGr.software = softwareGr.sys_id;
 				softwareRelationGr.insert();
-				
+				*/
 				returnValue.count++;
 			}			
 		} catch (error) {
@@ -291,13 +296,13 @@ DownloadProcessor.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2019-05-08 16:02:53</sys_created_on>
         <sys_id>02a39d29db11330011b3e9c948961947</sys_id>
-        <sys_mod_count>27</sys_mod_count>
+        <sys_mod_count>56</sys_mod_count>
         <sys_name>DownloadProcessor</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
         <sys_update_name>sys_script_include_02a39d29db11330011b3e9c948961947</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2019-05-09 09:25:23</sys_updated_on>
+        <sys_updated_on>2019-05-27 08:43:33</sys_updated_on>
     </sys_script_include>
 </record_update>

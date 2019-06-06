@@ -53,7 +53,7 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2017-12-07 12:25:36</sys_created_on>
-        <sys_id>9a425da5db11330011b3e9c948961974</sys_id>
+        <sys_id>e15f1ac3db11330051baa08a489619bd</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>x_16255_cmdb_sync_tag</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
@@ -61,7 +61,7 @@
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
         <sys_update_name>sys_dictionary_x_16255_cmdb_sync_tag_NULL</sys_update_name>
         <sys_updated_by>system</sys_updated_by>
-        <sys_updated_on>2019-05-08 15:56:16</sys_updated_on>
+        <sys_updated_on>2019-05-13 13:23:52</sys_updated_on>
         <table_reference>false</table_reference>
         <text_index>false</text_index>
         <unique>false</unique>

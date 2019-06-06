@@ -4,22 +4,22 @@
         <license_condition/>
         <license_model>none</license_model>
         <license_roles/>
-        <name>x_16255_cmdb_sync_software</name>
+        <name>x_16255_cmdb_sync_asset</name>
         <op_delete>true</op_delete>
         <op_insert>true</op_insert>
         <op_update>true</op_update>
         <owner_condition/>
         <sys_class_name>ua_table_licensing_config</sys_class_name>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2019-05-09 08:21:29</sys_created_on>
-        <sys_id>63c370b5db51330011b3e9c94896192d</sys_id>
+        <sys_created_on>2019-05-09 08:19:34</sys_created_on>
+        <sys_id>0e5f5ac3db11330051baa08a48961986</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name>x_16255_cmdb_sync_software</sys_name>
+        <sys_name>x_16255_cmdb_sync_asset</sys_name>
         <sys_package display_value="Sync App" source="x_16255_cmdb_sync">8b8f5740dbb203009b6cf7fdbf9619b6</sys_package>
         <sys_policy/>
         <sys_scope display_value="Sync App">8b8f5740dbb203009b6cf7fdbf9619b6</sys_scope>
-        <sys_update_name>ua_table_licensing_config_63c370b5db51330011b3e9c94896192d</sys_update_name>
+        <sys_update_name>ua_table_licensing_config_0e5f5ac3db11330051baa08a48961986</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2019-05-09 08:21:29</sys_updated_on>
+        <sys_updated_on>2019-05-09 08:19:34</sys_updated_on>
     </ua_table_licensing_config>
 </record_update>
